@@ -1,0 +1,5 @@
+database,category,name,rows,time,query_template,query_executed
+Oracle Database,Join,UNION ALL,,,SELECT {columns} FROM {table1} UNION ALL SELECT {columns} FROM {table2},
+Oracle Database,Join,UNION,,,SELECT {columns} FROM {table1} UNION SELECT {columns} FROM {table2},
+Oracle Database,Join,INNER,,,SELECT {columns} FROM {table1} INNER JOIN {table2} ON {table1}.{column1} = {table2}.{column2},
+Oracle Database,Join,FULL OUTER,,,SELECT {columns} FROM {table1} FULL OUTER JOIN {table2} ON {table1}.{column1} = {table2}.{column2},
