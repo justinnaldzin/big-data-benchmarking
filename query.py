@@ -33,8 +33,8 @@ def query_builder(table, datatypes_dataframe):
     clob_columns = datatypes_dataframe[datatypes_dataframe['DATA_TYPE'] == 'CLOB']['COLUMN_NAME']
     character_columns = datatypes_dataframe[datatypes_dataframe['DATA_TYPE'] != 'CLOB']['COLUMN_NAME']
     number_columns = datatypes_dataframe[datatypes_dataframe['DATA_TYPE'].isin(['NUMBER', 'FLOAT'])]['COLUMN_NAME']  # Oracle
-    #number_columns = datatypes_dataframe[datatypes_dataframe['DATA_TYPE'].isin(['INTEGER', 'BIGINT'])]['COLUMN_NAME']  # HANA
-    #number_columns = datatypes_dataframe[datatypes_dataframe['DATA_TYPE'].isin(['tinyint', 'smallint', 'int', 'bigint', 'decimal', 'numeric', 'smallmoney', 'money', 'float', 'real'])]['COLUMN_NAME']  # SQL Server
+    number_columns = datatypes_dataframe[datatypes_dataframe['DATA_TYPE'].isin(['INTEGER', 'BIGINT'])]['COLUMN_NAME']  # HANA
+    number_columns = datatypes_dataframe[datatypes_dataframe['DATA_TYPE'].isin(['tinyint', 'smallint', 'int', 'bigint', 'decimal', 'numeric', 'smallmoney', 'money', 'float', 'real'])]['COLUMN_NAME']  # SQL Server
 
     Oracle_numeric_datatypes = ['NUMBER', 'FLOAT']
     HANA_numeric_datatypes = ['TINYINT', 'SMALLINT', 'INTEGER', 'BIGINT', 'SMALLDECIMAL', 'DECIMAL', 'REAL', 'DOUBLE']
@@ -70,8 +70,8 @@ def benchmark(conn, tables_dataframe, queries_dataframe):
 
         # Query table for datatypes (LONG, NUMBER, TIMESTAMP, VARCHAR2, BLOB, CHAR, CLOB, DATE, FLOAT) and use columns for query builder
         datatypes_query = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, DATA_LENGTH FROM ALL_TAB_COLUMNS WHERE TABLE_NAME = '" + table + "'"  # Oracle
-        #datatypes_query = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE_NAME AS DATA_TYPE, LENGTH AS DATA_LENGTH FROM TABLE_COLUMNS WHERE SCHEMA_NAME = 'NALDZINJ' AND TABLE_NAME = '" + table + "'"  # HANA
-        #datatypes_query = "SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, DATETIME_PRECISION, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + table + "'"  # SQL Server
+        datatypes_query = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE_NAME AS DATA_TYPE, LENGTH AS DATA_LENGTH FROM TABLE_COLUMNS WHERE SCHEMA_NAME = 'NALDZINJ' AND TABLE_NAME = '" + table + "'"  # HANA
+        datatypes_query = "SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, DATETIME_PRECISION, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + table + "'"  # SQL Server
         datatypes_dataframe = pandas.read_sql(datatypes_query, conn)
         datatypes_dataframe.columns = map(str.upper, datatypes_dataframe.columns)  # bug:  HANA returns lowercase columns
 
@@ -92,13 +92,16 @@ def benchmark(conn, tables_dataframe, queries_dataframe):
 
 def oracle_database(database, attributes, csv_filepath):
 
+    # Define Database object
+    from database import Database
+    db = Database(attributes)
+
     # Connect to Database
-    logging.info("Establishing connection to " + database + "...")
-    engine = create_engine(attributes['connection_string'])
+    db.connect()
 
     # Retrieve all table names
     sql = "SELECT TABLE_NAME, TABLESPACE_NAME FROM USER_TABLES"
-    tables_dataframe = pandas.read_sql(sql, engine)
+    tables_dataframe = pandas.read_sql(sql, db.connection)
 
     # Read in sample queries
     queries_csv_filepath = 'queries/queries.csv'
@@ -109,7 +112,7 @@ def oracle_database(database, attributes, csv_filepath):
     iterations = 2
     with Timer() as t:
         for _ in range(iterations):
-            benchmark_dataframe = benchmark(engine, tables_dataframe, queries_dataframe)
+            benchmark_dataframe = benchmark(db.connection, tables_dataframe, queries_dataframe)
             benchmark_dataframe.to_csv(csv_filepath, index=False, mode='a', header=not os.path.isfile(csv_filepath))
     print('Benchmark time: %.07f sec.' % t.interval)
 
@@ -145,11 +148,9 @@ def sql_server(database, attributes, csv_filepath):
         logging.warning("Missing " + database + " queries from the CSV")
 
 
-def hive(database, attributes, csv_filepath):
-    engine = create_engine(attributes['connection_string'])
-    sql = "SELECT * FROM notedata"
-    tables_dataframe = pandas.read_sql(sql, engine)
-    print(tables_dataframe)
+def hive(configs):
+    import pyhive
+
 
 def hana(database, attributes, csv_filepath):
 
@@ -178,21 +179,5 @@ def hana(database, attributes, csv_filepath):
     else:
         logging.warning("Missing " + database + " queries from the CSV")
 
-def spark_sql(database, attributes, csv_filepath):
-    #transfer all csv files to HDFS
-
-    #subprocess.call()
-    '''
-        from pyspark.sql import SQLContext
-        sqlContext = SQLContext(sc)
-
-        df = sqlContext.read.csv(path='/some/path/file.csv', header='true', inferSchema='true')  # read CSV file
-        df.write.orc('/path/table.orc')  # write ORC file
-        df.write.parquet('/path/table.parquet')  # write Parquet file
-        df.write.avro('path/table.avro')  # write AVRO file
-
-        orc_df = sqlContext.read.orc('/path/table.orc')  # read ORC file
-        orc_df.createOrReplaceTempView("newtable")  # register DataFrame as a temporary table
-        new_df = sqlContext.sql("SELECT * FROM newtable")  # create a DataFrame using SQL statement
-        spark.catalog.dropTempView("newtable")
-    '''
+def spark_sql(configs):
+    pass
