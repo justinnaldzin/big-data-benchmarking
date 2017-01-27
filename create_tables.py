@@ -6,7 +6,7 @@ import logging
 import subprocess
 import pandas
 from inflection import underscore
-from sqlalchemy import create_engine, types
+from sqlalchemy import create_engine
 
 
 script_dir = os.path.dirname(os.path.join(os.getcwd(), __file__))
@@ -90,35 +90,32 @@ def individual(database, attributes):
     '''
     Create individual SQL tables for every CSV file within a directory
     '''
-    logging.info("Establishing connection to " + database + "...")
-    engine = create_engine(attributes['connection_string'])
+    logging.info("Creating individual tables for:  " + database)
     table_list = []
     for filename in os.listdir(data_path):
         if filename.endswith(".csv"):
             csv_filepath = os.path.join(data_path, filename)
             logging.info("Reading CSV file: " + csv_filepath)
             dataframe = pandas.read_csv(csv_filepath, low_memory=False)  # infer dtypes
-            logging.info(str(len(dataframe.index)) + " rows")
-            dataframe.dropna(axis=1, thresh=len(dataframe.index)//10, inplace=True)  # drop columns having over 90% NaN values
             dataframe.columns = map(str.upper, map(underscore, dataframe.columns))  # camelcase to underscore to uppercase
+            ############################################################################################################
+            # map DataFrame dtypes to Database data types
+            from sqlalchemy import types
+            # from sqlalchemy.dialects.oracle import BFILE, BLOB, CHAR, CLOB, DATE, DOUBLE_PRECISION, FLOAT, INTERVAL, LONG, NCLOB, NUMBER, NVARCHAR, NVARCHAR2, RAW, TIMESTAMP, VARCHAR, VARCHAR2
             dtype_dict = {}
-            for column in dataframe.columns:  # map DataFrame dtypes to Database data types
-                ###########################################################################
-                if dataframe[column].dtype not in ['object', 'int64', 'float64']:
-                    import sys
-                    print(dataframe[column].dtype)
-                    sys.exit(1)
-                ###########################################################################
-                if dataframe[column].dtype in ['object']:
-                    #dtype_dict[column] = types.String(dataframe[column].map(str).map(len).max())  # TypeError: object of type 'float' has no len()
-                    dtype_dict[column] = types.String(dataframe[column].str.len().max())
-                elif dataframe[column].dtype in ['int64']:
+            for column in dataframe.columns:
+                if dataframe[column].dtype in ['object_', 'object', 'string_', 'unicode_', 'unicode']:
+                    dtype_dict[column] = types.String(dataframe[column].map(str).map(len).max())
+                elif dataframe[column].dtype in ['int_', 'int64']:
                     dtype_dict[column] = types.Integer()
-                elif dataframe[column].dtype in ['float64']:
+                elif dataframe[column].dtype in ['float_', 'float64']:
                     dtype_dict[column] = types.Float()  #types.Float(len(str(dataframe[column].max())))
                 else:
-                    logging.error(str(dataframe[column].dtype) + " dtype unsupported.  Dropping column: " + column)  # ['object_', 'string_', 'unicode_', 'unicode', 'int_', 'float_']
+                    logging.error(str(dataframe[column].dtype) + " dtype unsupported.  Dropping column: " + column)
                     del dataframe[column]
+            ############################################################################################################
+            logging.info("Establishing connection to " + database + "...")
+            engine = create_engine(attributes['connection_string'])
             table_name = os.path.splitext(os.path.basename(filename))[0] #  set table name to filename
             logging.info("Inserting data into table: " + table_name)
             dataframe.to_sql(table_name, engine, if_exists='replace', index=True, index_label='_index', chunksize=1000, dtype=dtype_dict)
