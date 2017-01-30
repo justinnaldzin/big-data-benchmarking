@@ -12,5 +12,5 @@ Vagrant.configure("2") do |config|
   end
   config.vm.provision :shell, :path => "scripts/base.sh"
   config.vm.provision :shell, :path => "scripts/python3_install.sh"
-  config.vm.synced_folder "..", "/benchmarking"
+  config.vm.synced_folder "..", "/big-data-benchmarking"
 end

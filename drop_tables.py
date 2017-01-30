@@ -1,17 +1,13 @@
 import logging
-from sqlalchemy import create_engine
 
 
-def drop(database, attributes, table_list):
+def drop(engine, tables_dataframe):
     '''
-    Drop SQL tables given the parameter 'table_list'
+    Drop SQL tables specified in the list parameter 'table_list'
     '''
-    logging.info("Establishing connection to " + database + "...")
-    engine = create_engine(attributes['connection_string'])
     connection = engine.connect()
-    for table_name in table_list:
+    for table_name in tables_dataframe['table_name']:
         sql = 'DROP TABLE "' + table_name + '"'
         logging.info("Dropping table: " + table_name)
-        logging.info(sql)
         connection.execute(sql)
     connection.close()
