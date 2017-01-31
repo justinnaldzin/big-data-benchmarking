@@ -16,26 +16,8 @@ def results(csv_filepath):
     bootstrap_css, avg_query_time_html = avg_query_time(dataframe)
 
 
-    # LINE CHART
-    avg_query_time_dataframe = dataframe.pivot_table(index=['concurrency_factor'], columns='database', values='time',
-                                                     aggfunc='mean').fillna('')
-    database_columns = avg_query_time_dataframe.columns
-    avg_query_time_dataframe.reset_index(inplace=True)
-    '''
-    line2 = Line(avg_query_time_dataframe, x='concurrency_factor', y=[col for col in database_columns],
-                 xlabel='Concurrency Factor', ylabel='Time in seconds', color=[col for col in database_columns],
-                 legend='top_right',
-                 width=1800, legend_sort_field='color', title="Avg execution time of query by concurrency factor")
-    '''
-    query_line_list = []
-    query_bar_list = []
-    concurrency_scatter_plot_list = []
-    database_bar_list = []
-    concurrency_bar_list = []
+
     for c in dataframe['concurrency_factor'].sort_values().unique():
-
-
-        ############
         avg_query_time_dataframe = dataframe[dataframe['concurrency_factor'] == c].pivot_table(index=['query_id', 'name'], columns='database', values='time',
                                                          aggfunc='mean').fillna('')
         database_columns = avg_query_time_dataframe.columns
@@ -44,35 +26,10 @@ def results(csv_filepath):
         query_line = Line(avg_query_time_dataframe, x='query_id', y=[col for col in database_columns],
                      xlabel='Query ID', ylabel='Time in seconds', color=[col for col in database_columns],
                      legend='top_right', legend_sort_field='color', title="Avg execution time of query by database")
-        ###############
 
-
-        query_bar = Bar(dataframe[dataframe['concurrency_factor'] == c], label='query_id', values='time', group='database', legend='top_right', xlabel='Query ID',
-                   ylabel='Time in seconds', title="Avg execution time by Query ID", agg='mean')
-
-        concurrency_scatter_plot = Scatter(dataframe[dataframe['concurrency_factor'] == c], x='rows', y='time',
-                                            color='database',
-                                           title="Concurrency " + str(c) + " | Individual execution time of query vs rows",
-                                           legend='top_left', legend_sort_field='color',
-                                           legend_sort_direction='ascending', xlabel='Number of rows',
-                                           ylabel='Time in seconds')
-
-        concurrency_bar = Bar(dataframe[dataframe['concurrency_factor'] == c], values='time', label='concurrency_factor',
-                              group='database', legend='top_right', xlabel='Concurrency factor', ylabel='Time in seconds',
-                              title="Concurrency " + str(c) + " | Avg execution time of query by concurrency factor", agg='mean')
-
-
-        database_bar = Bar(dataframe[dataframe['concurrency_factor'] == c], values='time', label='database',
-                           stack='category', legend='top_right', xlabel='Database', ylabel='Time in seconds',
-                              title="Concurrency " + str(c) + " | Avg execution time of query by database", agg='mean')
-        query_line_list.append(query_line)
-        query_bar_list.append(query_bar)
-        concurrency_scatter_plot_list.append(concurrency_scatter_plot)
-        database_bar_list.append(database_bar)
-        concurrency_bar_list.append(concurrency_bar)
 
     # HTML
-    bokeh_html = file_html(column(row(query_line_list), row(query_bar_list), row(concurrency_scatter_plot_list), row(database_bar_list), row(concurrency_bar_list)),
+    bokeh_html = file_html(column(row(None)),
                      title='Big Data Benchmarking', resources=CDN)
 
     output_file = 'Big-Data-Benchmarking.html'

@@ -5,7 +5,7 @@ set -x
 # Install Python 3
 yum -y update
 yum -y install https://centos7.iuscommunity.org/ius-release.rpm   # Inline with Upstream Stable. A community project, IUS provides Red Hat Package Manager (RPM) packages for some newer versions of select software.
-yum -y install python35u-3.5.2  # Python 3.5.2
+yum -y install python35u  # Python 3.5
 yum -y install python35u-pip  # pip
 yum -y install python35u-devel  # libraries and header files
 yum -y install python-tools  # 2to3 tool

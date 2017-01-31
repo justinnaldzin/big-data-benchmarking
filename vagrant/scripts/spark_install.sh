@@ -10,7 +10,9 @@ rpm -ivh /vagrant/installs/jdk-8u111-linux-x64.rpm
 tar zxvf /vagrant/installs/spark-2.0.2-bin-hadoop2.7.tgz -C /opt
 mv /opt/spark-2.0.2-bin-hadoop2.7 /opt/spark-2.0.2
 ln -s /opt/spark-2.0.2 /opt/spark
+unzip /opt/spark/python/lib/py4j-0.10.3-src.zip
 echo 'export SPARK_HOME=/opt/spark' >> /etc/profile.d/spark.sh
+echo 'export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python:$SPARK_HOME/python/lib' >> /etc/profile.d/spark.sh
 echo 'export PATH=$PATH:$SPARK_HOME/bin' >> /etc/profile.d/spark.sh
 source /etc/profile.d/spark.sh
 
