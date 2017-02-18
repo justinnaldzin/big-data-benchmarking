@@ -134,7 +134,8 @@ def main(args):
 
     # Plot
     logging.info('############  Plotting results from ' + csv_filepath + '  ############')
-    plot.results(csv_filepath)
+    logging.info('############  SKIPPING  ############')
+
 
     # Finish
     logging.info(script_name + " script duration: " + str(datetime.now(timezone.utc) - start_timestamp))

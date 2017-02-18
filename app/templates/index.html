@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title if title else "Bokeh Plot" }}</title>
+    {{ bokeh_css }}
+    {{ bokeh_js }}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div>
+      <h1>Big Data Benchmarking</h1>
+      <p> This dashboard summarize the results from the Big Data Benchmarking project.  These charts are generated directly from the CSV file.  The charts are explained as follows:</p>
+      <ul style="list-style-type:disc">
+        <li>A <code>DataTable</code> displays the raw output from the CSV file.</li>
+        <li>A <code>BarChart</code> displaying the average query execution time for each database based on the concurrency factor.</li>
+        <li>A <code>ScatterChart</code> displays a point for every query comparing the execution time vs the number of rows returned from the query.</li>
+        <li>A <code>BarChart</code> displaying the average query execution time for each database based on the query category.</li>
+        <li>A <code>BarChart</code> displaying the average query execution time for each database based on the table size.</li>
+        <li>A <code>BarChart</code> displaying the average query execution time for each query based on the database.</li>
+        <li>A <code>LineChart</code> displaying the average query execution time for each query based on the database.</li>
+        <li>A <code>DataTable</code> summarizing the average query execution times per database.</li>
+      </ul>
+       <p><b>NOTE</b>: Use the <code>widgets</code> to control the data in the DataTable.  Then click the "Download" button to export the raw data to a CSV file.</p>
+    </div>
+    {{ plot_div|indent(8) }}
+    {{ plot_script|indent(8) }}
+  </body>
+</html>

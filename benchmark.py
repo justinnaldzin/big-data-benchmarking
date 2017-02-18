@@ -35,11 +35,8 @@ def query_builder(table_name, datatypes_dataframe, rows):
     query_builder_dict['column_1'] = '"' + character_columns.sample().to_string(header=False, index=False) + '"'
     query_builder_dict['column_2'] = '"' + character_columns.sample().to_string(header=False, index=False) + '"'
     query_builder_dict['row'] = str(randint(1, rows))
-    query_builder_dict['agg_column'] = '"' + numeric_columns.sample().to_string(header=False, index=False) + '"'
     query_builder_dict['order_column'] = '"' + character_columns.sample().to_string(header=False, index=False) + '"'
-    query_builder_dict['analytic_column'] = '"' + numeric_columns.sample().to_string(header=False, index=False) + '"'
-    query_builder_dict['table1'] = '"' + table_name + '"'
-    query_builder_dict['table2'] = '"' + table_name + '"'
+    query_builder_dict['numeric_column'] = '"' + numeric_columns.sample().to_string(header=False, index=False) + '"'
     query_builder_dict['column'] = '"' + character_columns.sample().to_string(header=False, index=False) + '"'
     return query_builder_dict
 
