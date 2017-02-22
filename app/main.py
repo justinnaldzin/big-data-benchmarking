@@ -1,21 +1,31 @@
 import os
-import sys
+import logging
 import random
 import pandas
 from collections import defaultdict
 from bokeh.charts import Bar, Scatter, Line
 from bokeh.layouts import widgetbox, row, column
 import bokeh.palettes
-from bokeh.models import Button, Select, RangeSlider, DataTable, ColumnDataSource, CustomJS, TableColumn, Div, CheckboxGroup, MultiSelect, HoverTool
+from bokeh.models import Button, Select, RangeSlider, DataTable, ColumnDataSource, CustomJS, TableColumn, Div, CheckboxGroup, MultiSelect
 from bokeh.io import curdoc
 
 
+'''
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s %(threadName)s %(message)s')
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+'''
+
 # Randomly choose a palette from a pre-defined list
-palettes = bokeh.palettes.all_palettes
-palettes_list = ['Category20', 'Accent', 'Paired', 'Pastel1', 'Spectral', 'Set3']
-palette_name = random.choice(list(palettes_list))
-print("palette_name:  " + str(palette_name))
-palette = palettes[palette_name][max(palettes[palette_name])]
+all_palettes = bokeh.palettes.all_palettes
+my_palettes_list = ['Category20', 'Accent', 'Paired', 'Pastel1', 'Spectral', 'Set3']
+palette_name = random.choice(list(my_palettes_list))
+logging.info("Using palette name:  " + str(palette_name))
+palette = all_palettes[palette_name][max(all_palettes[palette_name])]
 
 # CSS
 bokeh_css = '''
@@ -50,11 +60,21 @@ def update(attrname, old, new):
 
 
 # Load source data
-csv_filepath = os.path.join(os.path.dirname(__file__), 'big_data_benchmarking_20170125.csv')
-if not os.path.isfile(csv_filepath):
-    print("ERROR - File: " + csv_filepath + " does not exist!")
-    sys.exit(1)
-print("Reading file: " + csv_filepath + "...")
+package_dirpath = os.path.abspath(os.path.join(__file__, "../.."))
+example_csv_filepath = os.path.join(package_dirpath, 'csv/big_data_benchmarking.csv.example')
+csv_filepath = os.path.join(package_dirpath, 'csv/big_data_benchmarking.csv')
+
+if os.path.isfile(csv_filepath):
+    pass
+elif os.path.isfile(example_csv_filepath):
+    logging.warning("CSV file: " + csv_filepath + " does NOT exist!")
+    logging.info("Using example CSV file: " + example_csv_filepath)
+    csv_filepath = example_csv_filepath
+else:
+    logging.error("CSV file: " + csv_filepath + " does NOT  exist!")
+    os._exit(1)
+
+logging.info("Reading CSV file: " + csv_filepath + "...")
 dataframe = pandas.read_csv(csv_filepath, low_memory=False)
 source = ColumnDataSource(data=dataframe)
 
