@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a portable, reproducible, and completely automated application designed to benchmark various database platforms and big data technologies with a goal of providing an indication of how each performs when working with a large set of data.  By ensuring the same dataset is applied across each database platform and executing syntactically equivalent queries, we can achieve an accurate comparison and understand where one outperforms the other.  An interactive HTTP dashboard containing various charting and graphing elements are used to display the benchmarking results.
+This is a portable, reproducible, and completely automated application designed to benchmark various database platforms and big data technologies with a goal of comparing how each performs when working with a large set of data.  By ensuring the same dataset is applied across each database platform and executing syntactically equivalent queries, we can achieve an accurate comparison and understand where one outperforms the other.  An interactive HTTP dashboard containing various charting and graphing elements are used to display the benchmarking results for full analysis.
 
 # DASHBOARD IMAGE HERE
 
@@ -12,37 +12,41 @@ This is a portable, reproducible, and completely automated application designed 
  - Oracle Database In-Memory
  - Microsoft SQL Server
  - SAP HANA
- - ~~Apache Hive~~ (coming soon)
- - ~~Apache Spark SQL~~ (coming soon)
+ - coming soon:
+   - SQLite (use pysqlite)
+   - MySQL (use mysqldb or mysql.connector or pymysql)
+   - MariaDB (use mysqldb or mysql.connector or pymysql)
+   - PostgreSQL (use psycopg2)
+   - Apache Hive
+   - Apache Spark SQL
+   - Microsoft Azure
 - Compatible on Linux, macOS, and Windows in a reproducible, portable development environment
-- Able to accept any dataset in CSV file format (containing headers)
+- Able to accept any source dataset in CSV file format (containing headers)
 - Create tables and insert into database the dataset specified
-- Run benchmarks on this new data set or on existing tables in the database
+- Run benchmarks on this new dataset or on existing tables in the database
 - Able to specify the number of benchmarking iterations to perform
-- Able to specify the number of concurrent users to perform the same benchmarking queries
+- Able to specify the number of concurrent users to simultaneously perform the same benchmarking queries
 - Predefined query templates used to formulate a dynamically generated query which is transferrable between each database technology using a syntactically equivalent query
-- Limit query results to a specified row limit
+- Limit query results to a specified row count
 - Drop tables (only on the newly created tables) immediately after the benchmark
 - Output benchmarking results to CSV
-- Present the results in an interactive HTML dashboard containing plots and graphs using a [Bokeh](http://bokeh.pydata.org/) server web app
+- Present the results in an interactive HTML dashboard containing data tables, charts and graphs using a [Bokeh](http://bokeh.pydata.org/) server web app
 
 ## Requirements
 
 - [Vagrant](https://www.vagrantup.com/) - A tool for building complete development environments
 - [VirtualBox](https://www.virtualbox.org/) - A cross-platform virtualization application
-- Python 3.x
 - Read/Write permissions to one or more of the following database technologies:
  - Oracle Database
  - Oracle Database In-Memory
  - Microsoft SQL Server
  - SAP HANA
- - Apache Hive
- - Apache Spark SQL
+ - more coming soon...
 - One or more CSV datasets (containing headers).  Recommended sites to find open datasets:
  - [data.gov](https://www.data.gov) - The home of the U.S. Government's open data
  - [/r/datasets](https://www.reddit.com/r/datasets/) - subreddit with hundreds of interesting datasets
  - [Awesome Public Datasets](https://github.com/caesar0301/awesome-public-datasets) - list of datasets, hosted on GitHub.
- - [Kaggle](https://www.kaggle.com/datasets) - Kaggle Datasets
+ - [Kaggle](https://www.kaggle.com/datasets) - Kaggle datasets
 
 ## Installation
 
@@ -80,7 +84,10 @@ $ tree -L 1
 10 directories, 10 files
 ```
 
-Move all CSV datasets into the `/big-data-benchmarking/data/` path
+Move all source CSV datasets into the `big-data-benchmarking/data/` path
+```sh
+mv /path/to/datasets/*.csv data/
+```
 
 Using the example configuration file, create a JSON file named `config.json` and add database credentials to the `connection_string` parameter
 ```sh
@@ -130,7 +137,10 @@ cd /big-data-benchmarking
 
 Print the command line help menu to view all the options for running the application
 ```
-$ python3 big_data_benchmarking.py --help
+                        UPDATE THIS
+
+
+$ ./big_data_benchmarking.py --help
 
 usage: big_data_benchmarking.py [-h] [-r ROWS] [-i ITERATIONS]
                                [-u CONCURRENT_USERS] [-p DATA_PATH] [-c] [-d]
@@ -168,50 +178,52 @@ optional arguments:
 
 ## Benchmarking
 
-The `big-data-benchmarking.py` Python script is the main entrypoint to the application.  Provide a brief logic of how the benchmarks are ran...
+<div class="alert alert-info">
+  <strong>Note!</strong> If you simply want to view the interactive dashboard using sample benchmarking results, skip this section and jump down to the [Benchmarking Results](#benchmarking-results) section.
+</div>
 
-Here are some example benchmarking scenarios, and how to execute the script:
+The `big-data-benchmarking.py` Python script is the main entrypoint to the application.  Here are some example benchmarking scenarios, and how to execute the script:
 
 - Run against **Oracle Database** and **SQL Server** with default options
 ```sh
-python3 big-data-benchmarking.py "Oracle Database" "SQL Server"
+./big-data-benchmarking.py "Oracle Database" "SQL Server"
 ```
 
 - Run against **HANA** limiting the number of rows to return from each query to **5000**
 ```sh
-python3 big-data-benchmarking.py "HANA" -r 5000
+./big-data-benchmarking.py "HANA" -r 5000
 ```
 
 - Run with **50** concurrent users
 ```sh
-python3 big-data-benchmarking.py "Oracle Database" -u 50
+./big-data-benchmarking.py "Oracle Database" -u 50
 ```
 
 - Run **10** iterations
 ```sh
-python3 big-data-benchmarking.py "Oracle Database" -i 10
+./big-data-benchmarking.py "Oracle Database" -i 10
 ```
 
 - Create tables on the database using all CSV files in the default datapath
 ```sh
-python3 big-data-benchmarking.py "Oracle Database" -i 10
+./big-data-benchmarking.py "Oracle Database" -c
 ```
 
 - Create tables specifying a different directory than the default `/big-data-benchmarking/data/` path where the CSV dataset resides
 ```sh
-python3 big-data-benchmarking.py "Oracle Database" -p /some/other/path/
+./big-data-benchmarking.py "Oracle Database" -c -p /some/other/path/
 ```
 
 - Create tables and drop only those tables after the benchmark completes
 ```sh
-python3 big-data-benchmarking.py "Oracle Database" -c -d
+./big-data-benchmarking.py "Oracle Database" -c -d
 ```
 
-## Benchmarking results
+## Benchmarking Results
 
-The results of the benchmarks are written to a CSV file within the `/big-data-benchmarking/csv/` path.  Understanding this raw data is not important but a sample dataset is provided within this directory.  This allows full functionality of the Bokeh server web application.
+The `/big-data-benchmarking/csv/` is the location where the actual benchmarking results are written to.  Here you will also find an example benchmarking results CSV file.  This example allows full functionality of the Bokeh server web application even without running any benchmarks.
 
-Here is a sample of that data:
+Here is a sample of what the CSV data looks like:
 
 <div class="alert alert-danger">
   <strong>GENERATE WITH:</strong> head -6 big_data_benchmarking_20170207.csv > temp.csv
@@ -228,34 +240,25 @@ Aggregate|1.0|Oracle Database|SUM DISTINCT|SELECT SUM(DISTINCT "CARRIER_DELAY") 
 
 ## Bokeh server web app
 
-[Bokeh](http://bokeh.pydata.org/) is a Python interactive visualization library that targets modern web browsers for presentation.
+[Bokeh](http://bokeh.pydata.org/) is a Python interactive visualization library that targets modern web browsers for presentation.  The Bokeh server web app uses the data from the CSV and generates an interactive HTML dashboard consisting of data tables, charts and graphs.  This allows us to visually analyze the data and compare each benchmarking result.
 
-By using the data from the CSV, we can generate an interactive HTML dashboard containing plots and graphs to fully understand the results and compare.
-
-Launch the Bokeh web app to serve an interactive HTTP dashboard consisting of data tables, charts and various plotting visualizations.
-
-Ensure the benchmarking result CSV dataset is within the `/bokeh-server/data/` path
-
-
-Instruct the bokeh server to launch the web app
+Instruct Bokeh server to launch the web app
 ```sh
 bokeh serve app
 ```
 
+Then open your browser and navigate to the dashboard:  http://localhost:5006
 
-Open your browser and navigate to the dashboard:  http://localhost:5006
+# DASHBOARD IMAGE HERE
 
+## Conclusion
 
-
-
-
-
-Finally, when you are finished running the benchmarks and are happy with the results, terminate the VM
+Finally, when you are finished running the benchmarks and no longer need to view the dashboard results, terminate the VM
 ```sh
 vagrant destroy
 ```
 <div class="alert alert-info">
-  <strong>Note!</strong> The `big-data-benchmarking` repo remain on your local system, along with the CSV results for further analysis.  You will no longer be able to run the benchmarks or the web app dashboard once the VM is terminated.  If so, you can relaunch the VM
+  <strong>Note!</strong> The `big-data-benchmarking` project folder remains on your local system, along with the CSV results for further analysis.  You will no longer be able to run the benchmarks or view the dashboard once the VM is terminated.  You can easily relaunch the VM to start over
 </div>
 ```sh
 vagrant up
@@ -264,6 +267,7 @@ vagrant up
 ## Feature requests
 
 - Option to specify the *minimum* amount of rows to return from each query.  Currently you are only permitted to limit the *maximum* amount of rows.
+- Benchmark different python drivers on the same database (example: `mysqldb` vs `mysql.connector` vs `pymysql`)
 
 ## Author
 
