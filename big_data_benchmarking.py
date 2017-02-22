@@ -17,10 +17,9 @@ from sqlalchemy import create_engine
 import drop_tables
 import create_tables
 import benchmark
-import plot
 
 
-script_dir = os.path.dirname(os.path.join(os.getcwd(), __file__))
+script_dir = os.path.dirname(os.path.abspath(__file__))
 script_name = os.path.splitext(os.path.basename(__file__))[0]
 
 
@@ -45,13 +44,13 @@ def main(args):
     # Validate data path
     start_timestamp = datetime.now(timezone.utc)
     logging.info("Started " + script_name + " script")
-    data_path=args['data_path']
+    data_path = args['data_path']
     if not os.path.isdir(data_path):
         logging.error("No such directory:  " + data_path)
         sys.exit(1)
 
     # Define the Big Data Benchmarking CSV file
-    csv_name = script_name + '_' + start_timestamp.strftime('%Y%m%d') + '.csv'
+    csv_name = script_name + '.csv'
     csv_filepath = os.path.join(script_dir, 'csv/' + csv_name)
 
     if not args['database_list']:
@@ -72,12 +71,12 @@ def main(args):
             engine = create_engine(attributes['connection_string'])
             if not args['create_tables']:  # Use existing tables in database
                 logging.info('############  Querying ' + database + ' for all table names  ############')
-                starts_with = 'On_Time_Performance_'
-                sql = attributes['table_name_query'].format(table_name=starts_with)
+                sql = attributes['table_name_query']
+                sql = sql + " WHERE TABLE_NAME LIKE 'On_Time_Performance_2016_5%'"
                 logging.info(sql)
                 tables_dataframe = pandas.read_sql(sql, engine)
                 tables_dataframe.columns = tables_dataframe.columns.str.lower()  # SQLAlchemy column case sensitivity is inconsistent between SQL dialects
-                logging.info('Found the following table names starting with "' + starts_with + '":')
+                logging.info('Found the following table names:')
                 [logging.info(table_name) for table_name in tables_dataframe['table_name']]
             else:  # Use data files on local file system to create tables and insert into database
                 logging.info('############  Searching for data files on local file system  ############')
@@ -101,7 +100,8 @@ def main(args):
                         logging.info(alter_table_query.format(table_name=table_name))
                         engine.connect().execute(alter_table_query.format(table_name=table_name))
 
-            # Query for the number of records in each table ang categorize
+            # Query for the number of records in each table and categorize
+            logging.info('############  Querying for the number of records in each table  ############')
             tables_dataframe['table_row_count'] = tables_dataframe['table_name'].apply(
                 lambda table_name: pandas.read_sql('SELECT COUNT(*) FROM "{table_name}"'.format(table_name=table_name),
                                                    engine).ix[:, 0])
@@ -109,6 +109,7 @@ def main(args):
             label_names = ['Small', 'Medium', 'Large', 'X-Large']
             tables_dataframe['table_size_category'] = pandas.cut(tables_dataframe['table_row_count'], bins,
                                                                  labels=label_names)
+            logging.info(tables_dataframe[['table_name', 'table_row_count', 'table_size_category']])
 
             # Benchmark database with concurrent connections
             logging.info('############  Benchmarking ' + database + '  ############')
@@ -132,14 +133,16 @@ def main(args):
                 logging.info('############  Dropping tables in ' + database + '  ############')
                 drop_tables.drop(engine, tables_dataframe)
 
-    # Plot
-    logging.info('############  Plotting results from ' + csv_filepath + '  ############')
-    logging.info('############  SKIPPING  ############')
-
-
     # Finish
     logging.info(script_name + " script duration: " + str(datetime.now(timezone.utc) - start_timestamp))
     logging.info("Finished " + script_name + " script")
+
+    # Bokeh server instructions
+    logging.info('------------------------------------------------------------------------------------')
+    logging.info('Instruct Bokeh server to launch the web app by typing:')
+    logging.info('   bokeh serve app')
+    logging.info('Then open your browser and navigate to:  http://localhost:5006')
+    logging.info('------------------------------------------------------------------------------------')
 
 
 if __name__ == '__main__':
