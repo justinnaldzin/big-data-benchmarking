@@ -2,19 +2,18 @@
 
 ## Overview
 
-This is a portable, reproducible, and completely automated application designed to benchmark various database platforms and big data technologies with a goal of providing an indication of how each performs when working with a large set of data.  By ensuring the same dataset is applied across each database platform and executing syntactically equivalent queries, we can achieve an accurate comparison and understand where one outperforms the other.  An interactive HTTP dashboard presents the benchmarking results to easily compare how each technology performs.
+This is a portable, reproducible, and completely automated application designed to benchmark various database platforms and big data technologies with a goal of providing an indication of how each performs when working with a large set of data.  By ensuring the same dataset is applied across each database platform and executing syntactically equivalent queries, we can achieve an accurate comparison and understand where one outperforms the other.  An interactive HTTP dashboard containing various charting and graphing elements are used to display the benchmarking results.
+
 # DASHBOARD IMAGE HERE
 
-The following big data technologies are supported:
-- Oracle Database
-- Oracle Database In-Memory
-- Microsoft SQL Server
-- SAP HANA
-- ~~Apache Hive~~
-- ~~Apache Spark SQL~~
-
 ## Features
-
+- Supports the following big data technologies:
+ - Oracle Database
+ - Oracle Database In-Memory
+ - Microsoft SQL Server
+ - SAP HANA
+ - ~~Apache Hive~~ (coming soon)
+ - ~~Apache Spark SQL~~ (coming soon)
 - Compatible on Linux, macOS, and Windows in a reproducible, portable development environment
 - Able to accept any dataset in CSV file format (containing headers)
 - Create tables and insert into database the dataset specified
@@ -25,9 +24,9 @@ The following big data technologies are supported:
 - Limit query results to a specified row limit
 - Drop tables (only on the newly created tables) immediately after the benchmark
 - Output benchmarking results to CSV
-- Present the results in an interactive HTML dashboard containing plots and graphs using the [Bokeh](http://bokeh.pydata.org/) server web app
+- Present the results in an interactive HTML dashboard containing plots and graphs using a [Bokeh](http://bokeh.pydata.org/) server web app
 
-## Prerequisites
+## Requirements
 
 - [Vagrant](https://www.vagrantup.com/) - A tool for building complete development environments
 - [VirtualBox](https://www.virtualbox.org/) - A cross-platform virtualization application
