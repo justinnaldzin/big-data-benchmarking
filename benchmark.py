@@ -49,7 +49,7 @@ def database(queries_dataframe, attributes, tables_dataframe, csv_filepath, args
     '''
     engine = create_engine(attributes['connection_string'])
     for i in range(args['iterations']):
-        logging.info("============  Iteration " + str(i+1) +  " ============")
+        logging.info("============  Iteration " + str(i+1) + " ============")
         benchmark_dataframe = pandas.DataFrame()
         for table_index, table_row in tables_dataframe.iterrows():
             logging.info("Querying: " + table_row['table_name'])
