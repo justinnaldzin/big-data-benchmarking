@@ -20,9 +20,9 @@ class Timer:
 
 
 def query_builder(table_name, datatypes_dataframe, rows):
-    '''
+    """
     Builds and returns a dictionary to be used with the str.format function.
-    '''
+    """
     oracle_numeric_datatypes = ['NUMBER', 'FLOAT', 'INTEGER']
     hana_numeric_datatypes = ['TINYINT', 'SMALLINT', 'INTEGER', 'BIGINT', 'SMALLDECIMAL', 'DECIMAL', 'REAL', 'DOUBLE']
     sqlserver_numeric_datatypes = ['tinyint', 'smallint', 'int', 'bigint', 'decimal', 'numeric', 'float']
@@ -42,11 +42,11 @@ def query_builder(table_name, datatypes_dataframe, rows):
 
 
 def database(queries_dataframe, attributes, tables_dataframe, csv_filepath, args):
-    '''
+    """
     Benchmark the database based on the number of iterations specified in the arg['iterations'] parameter.  Execute
     every query from the 'queries_dataframe' parameter against every table in the 'tables_dataframe' parameter.  Write the
     execution time to the 'csv_filepath' parameter.
-    '''
+    """
     engine = create_engine(attributes['connection_string'])
     for i in range(args['iterations']):
         logging.info("============  Iteration " + str(i+1) + " ============")
