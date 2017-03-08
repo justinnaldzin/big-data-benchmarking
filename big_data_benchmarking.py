@@ -72,7 +72,9 @@ def main(args):
             if not args['create_tables']:  # Use existing tables in database
                 logging.info('############  Querying ' + database + ' for all table names  ############')
                 sql = attributes['table_name_query']
-                sql = sql + " WHERE TABLE_NAME LIKE 'On_Time_Performance_2016_5%'"
+                ########################################################################################################
+                #  DEBUG
+                #sql = sql + " WHERE TABLE_NAME LIKE 'On_Time_Performance_2016%'"
                 logging.info(sql)
                 tables_dataframe = pandas.read_sql(sql, engine)
                 tables_dataframe.columns = tables_dataframe.columns.str.lower()  # SQLAlchemy column case sensitivity is inconsistent between SQL dialects
@@ -90,7 +92,7 @@ def main(args):
                 logging.info('Found the following files in path:  ' + str(data_path))
                 [logging.info(filename) for filename in data_filepath_list]
 
-                logging.info('############  Loading data into ' + database + '  ############')
+                logging.info('############  Create tables and load data into ' + database + '  ############')
                 create_tables.individual(engine, data_filepath_list)
 
                 # Alter table
@@ -134,7 +136,7 @@ def main(args):
                 drop_tables.drop(engine, tables_dataframe)
 
     # Finish
-    logging.info(script_name + " script duration: " + str(datetime.now(timezone.utc) - start_timestamp))
+    logging.info(script_name + " script duration:  " + str(datetime.now(timezone.utc) - start_timestamp))
     logging.info("Finished " + script_name + " script")
 
     # Bokeh server instructions
