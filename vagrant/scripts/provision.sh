@@ -45,6 +45,12 @@ pip3 install pyhdb==0.3.2  # SAP HANA Database Client for Python
 pip3 install sqlalchemy-hana==0.2.1  # SQLAlchemy dialect for SAP HANA
 pip3 install PyHive==0.2.1  # Python interface to Hive
 pip3 install pymssql==2.1.3  # DB-API interface to Microsoft SQL Server for Python
+#pip3 install pysqlite
+#pip3 install mysqldb
+#pip3 install mysql.connector
+pip3 install PyMySQL==0.7.10
+#pip3 install pymysql
+pip3 install psycopg2==2.7
 pip3 install csvkit==1.0.1  # Suite of utilities for converting to and working with CSV
 pip3 install inflection==0.3.1
 pip3 install sasl==0.2.1
