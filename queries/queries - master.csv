@@ -25,6 +25,10 @@ query_id,database,category,name,query_template
 24,Oracle Database,Subquery,EXISTS,SELECT {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL) AND ROWNUM <= {row}
 25,Oracle Database,Subquery,below average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
 26,Oracle Database,Subquery,above average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
+27,Oracle Database,Join,self JOIN,"SELECT table1.{column_1}, table1.{column_2} FROM {table} table1, {table} table2 WHERE table1.{column_1} = table2.{column_1} AND table1.{column_2} <> table2.{column_2} AND ROWNUM <= {row} ORDER BY table1.{column_1}"
+28,Oracle Database,Join,LEFT JOIN,"SELECT table1.{column_1}, table1.{column_2} FROM {table} table1 LEFT JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2} AND ROWNUM <= {row}"
+29,Oracle Database,Join,RIGHT JOIN,"SELECT table1.{column_1}, table1.{column_2} FROM {table} table1 RIGHT JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2} AND ROWNUM <= {row}"
+30,Oracle Database,Join,FULL JOIN,"SELECT table1.{column_1}, table1.{column_2} FROM {table} table1 FULL JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2} AND ROWNUM <= {row}"
 1,HANA,Aggregate,COUNT *,SELECT COUNT(*) FROM {table}
 2,HANA,Aggregate,COUNT,SELECT COUNT({numeric_column}) FROM {table}
 3,HANA,Aggregate,COUNT DISTINCT,SELECT COUNT(DISTINCT {numeric_column}) FROM {table}
@@ -51,6 +55,10 @@ query_id,database,category,name,query_template
 24,HANA,Subquery,EXISTS,SELECT TOP {row} {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL)
 25,HANA,Subquery,below average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
 26,HANA,Subquery,above average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
+27,HANA,Join,self JOIN,"SELECT TOP {row} table1.{column_1}, table1.{column_2} FROM {table} table1 JOIN {table} table2 WHERE table1.{column_1} = table2.{column_1} AND table1.{column_2} <> table2.{column_2} ORDER BY table1.{column_1}"
+28,HANA,Join,LEFT JOIN,"SELECT TOP {row} table1.{column_1}, table1.{column_2} FROM {table} table1 LEFT JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2}"
+29,HANA,Join,RIGHT JOIN,"SELECT TOP {row} table1.{column_1}, table1.{column_2} FROM {table} table1 RIGHT JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2}"
+30,HANA,Join,FULL JOIN,"SELECT TOP {row} table1.{column_1}, table1.{column_2} FROM {table} table1 FULL JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2}"
 1,Oracle Database In-Memory,Aggregate,COUNT *,SELECT COUNT(*) FROM {table}
 2,Oracle Database In-Memory,Aggregate,COUNT,SELECT COUNT({numeric_column}) FROM {table}
 3,Oracle Database In-Memory,Aggregate,COUNT DISTINCT,SELECT COUNT(DISTINCT {numeric_column}) FROM {table}
@@ -77,6 +85,10 @@ query_id,database,category,name,query_template
 24,Oracle Database In-Memory,Subquery,EXISTS,SELECT {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL) AND ROWNUM <= {row}
 25,Oracle Database In-Memory,Subquery,below average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
 26,Oracle Database In-Memory,Subquery,above average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
+27,Oracle Database In-Memory,Join,self JOIN,"SELECT table1.{column_1}, table1.{column_2} FROM {table} table1, {table} table2 WHERE table1.{column_1} = table2.{column_1} AND table1.{column_2} <> table2.{column_2} AND ROWNUM <= {row} ORDER BY table1.{column_1}"
+28,Oracle Database In-Memory,Join,LEFT JOIN,"SELECT table1.{column_1}, table1.{column_2} FROM {table} table1 LEFT JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2} AND ROWNUM <= {row}"
+29,Oracle Database In-Memory,Join,RIGHT JOIN,"SELECT table1.{column_1}, table1.{column_2} FROM {table} table1 RIGHT JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2} AND ROWNUM <= {row}"
+30,Oracle Database In-Memory,Join,FULL JOIN,"SELECT table1.{column_1}, table1.{column_2} FROM {table} table1 FULL JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2} AND ROWNUM <= {row}"
 1,SQL Server,Aggregate,COUNT *,SELECT COUNT(*) FROM {table}
 2,SQL Server,Aggregate,COUNT,SELECT COUNT({numeric_column}) FROM {table}
 3,SQL Server,Aggregate,COUNT DISTINCT,SELECT COUNT(DISTINCT {numeric_column}) FROM {table}
@@ -103,3 +115,7 @@ query_id,database,category,name,query_template
 24,SQL Server,Subquery,EXISTS,SELECT TOP {row} {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL)
 25,SQL Server,Subquery,below average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
 26,SQL Server,Subquery,above average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
+27,SQL Server,Join,self JOIN,"SELECT TOP {row} table1.{column_1}, table1.{column_2} FROM {table} table1 JOIN {table} table2 WHERE table1.{column_1} = table2.{column_1} AND table1.{column_2} <> table2.{column_2} ORDER BY table1.{column_1}"
+28,SQL Server,Join,LEFT JOIN,"SELECT TOP {row} table1.{column_1}, table1.{column_2} FROM {table} table1 LEFT JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2}"
+29,SQL Server,Join,RIGHT JOIN,"SELECT TOP {row} table1.{column_1}, table1.{column_2} FROM {table} table1 RIGHT JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2}"
+30,SQL Server,Join,FULL JOIN,"SELECT TOP {row} table1.{column_1}, table1.{column_2} FROM {table} table1 FULL JOIN {table} table2 ON table1.{column_1} = table2.{column_1} WHERE table1.{column_2} <> table2.{column_2}"
