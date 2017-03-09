@@ -2,10 +2,13 @@
 
 
 import os
+import sys
 import time
-from random import randint
 import logging
+import threading
 import pandas
+from random import randint
+from retrying import retry
 from sqlalchemy import create_engine
 
 
@@ -17,6 +20,48 @@ class Timer:
     def __exit__(self, *args):
         self.end = time.perf_counter()
         self.interval = self.end - self.start
+
+
+class Timeout(Exception):
+    pass
+
+
+def timelimit(timeout):
+    def internal(function):
+        def internal2(*args, **kw):
+            class Calculator(threading.Thread):
+                def __init__(self):
+                    threading.Thread.__init__(self)
+                    self.result = None
+                    self.error = None
+
+                def run(self):
+                    try:
+                        self.result = function(*args, **kw)
+                    except:
+                        self.error = sys.exc_info()[0]
+            c = Calculator()
+            c.start()
+            c.join(timeout)
+            if c.isAlive():
+                raise Timeout
+            if c.error:
+                raise c.error
+            return c.result
+        return internal2
+    return internal
+
+
+@retry(stop_max_attempt_number=6)  # stop after 6 attempts
+@timelimit(3600)  # timeout after 600 seconds (10 minutes)
+def query(engine, query_template, table_name, datatypes_dataframe, rows):
+    query_builder_dict = query_builder(table_name, datatypes_dataframe, rows)
+    sql = query_template.format(**query_builder_dict)
+    logging.debug(sql)
+    with Timer() as t:
+        dataframe = pandas.read_sql(sql, engine)
+        rows = len(dataframe.index)
+    return sql, rows, float(t.interval)
 
 
 def query_builder(table_name, datatypes_dataframe, rows):
@@ -57,14 +102,12 @@ def database(queries_dataframe, attributes, tables_dataframe, csv_filepath, args
             datatypes_dataframe = pandas.read_sql(datatypes_query, engine)
             datatypes_dataframe.columns = map(str.lower, datatypes_dataframe.columns)  # SQLAlchemy column case sensitivity is inconsistent between SQL dialects
             for query_index, query_row in queries_dataframe.iterrows():
-                query_builder_dict = query_builder(table_row['table_name'], datatypes_dataframe, args['rows'])
-                sql = query_row['query_template'].format(**query_builder_dict)
-                with Timer() as t:
-                    dataframe = pandas.read_sql(sql, engine)
-                    query_row['rows'] = len(dataframe.index)
-                logging.info("Query " + str(query_row['query_id']) + str(':  {:f} sec'.format(t.interval)))
-                query_row['time'] = float(t.interval)
-                query_row['query_executed'] = sql
+                try:
+                    (query_row['query_executed'], query_row['rows'], query_row['time']) = query(engine, query_row['query_template'], table_row['table_name'], datatypes_dataframe, args['rows'])
+                    logging.info("Query " + str(query_row['query_id']) + str(':  {:f} sec'.format(query_row['time'])))
+                except Timeout:
+                    (query_row['query_executed'], query_row['rows'], query_row['time']) = ('Timeout!', 0, 600)
+                    logging.warning("Timeout!  " + "Query " + str(query_row['query_id']) + str(':  {:f} sec'.format(query_row['time'])))
                 query_row['concurrency_factor'] = int(args['concurrent_users'])
                 query_row = pandas.concat([query_row, table_row])
                 benchmark_dataframe = benchmark_dataframe.append(query_row, ignore_index=True)
