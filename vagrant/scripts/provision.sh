@@ -52,6 +52,7 @@ pip3 install PyMySQL==0.7.10
 #pip3 install pymysql
 pip3 install psycopg2==2.7
 pip3 install csvkit==1.0.1  # Suite of utilities for converting to and working with CSV
+pip3 install retrying==1.3.3
 pip3 install inflection==0.3.1
 pip3 install sasl==0.2.1
 pip3 install thrift==0.9.3
