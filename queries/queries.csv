@@ -45,9 +45,9 @@ query_id,database,category,name,query_template
 18,HANA,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE '%s%'
 19,HANA,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '(v|ph|f)'
 20,HANA,Pattern,containing double vowels,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '([aeiou])\1'
-21,HANA,Union,UNION,SELECT TOP {row} {columns} FROM {table} UNION SELECT TOP {row} {columns} FROM {table}
-22,HANA,Union,UNION,SELECT TOP {row} {columns} FROM {table} UNION SELECT TOP {row} {columns} FROM {table}
-23,HANA,Union,UNION ALL,SELECT TOP {row} {columns} FROM {table} UNION ALL SELECT TOP {row} {columns} FROM {table}
+21,HANA,Union,UNION,SELECT {columns} FROM {table} UNION SELECT {columns} FROM {table} LIMIT {row}
+22,HANA,Union,UNION,SELECT {columns} FROM {table} UNION SELECT {columns} FROM {table} LIMIT {row}
+23,HANA,Union,UNION ALL,SELECT {columns} FROM {table} UNION ALL SELECT {columns} FROM {table} LIMIT {row}
 24,HANA,Subquery,EXISTS,SELECT TOP {row} {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL)
 25,HANA,Subquery,below average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
 26,HANA,Subquery,above average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
@@ -97,9 +97,9 @@ query_id,database,category,name,query_template
 18,SQL Server,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE '%s%'
 19,SQL Server,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '(v|ph|f)'
 20,SQL Server,Pattern,containing double vowels,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '([aeiou])\1'
-21,SQL Server,Union,UNION,SELECT TOP {row} {columns} FROM {table} UNION SELECT TOP {row} {columns} FROM {table}
-22,SQL Server,Union,UNION,SELECT TOP {row} {columns} FROM {table} UNION SELECT TOP {row} {columns} FROM {table}
-23,SQL Server,Union,UNION ALL,SELECT TOP {row} {columns} FROM {table} UNION ALL SELECT TOP {row} {columns} FROM {table}
+21,SQL Server,Union,UNION,SELECT TOP ({row}/2) {columns} FROM {table} UNION SELECT TOP ({row}/2) {columns} FROM {table}
+22,SQL Server,Union,UNION,SELECT TOP ({row}/2) {columns} FROM {table} UNION SELECT TOP ({row}/2) {columns} FROM {table}
+23,SQL Server,Union,UNION ALL,SELECT TOP ({row}/2) {columns} FROM {table} UNION ALL SELECT TOP ({row}/2) {columns} FROM {table}
 24,SQL Server,Subquery,EXISTS,SELECT TOP {row} {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL)
 25,SQL Server,Subquery,below average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
 26,SQL Server,Subquery,above average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
