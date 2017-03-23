@@ -15,16 +15,14 @@ query_id,database,category,name,query_template
 14,Oracle Database,Analytic,"n rows, descending order",SELECT {columns} FROM {table} WHERE ROWNUM <= {row} ORDER BY {order_column} DESC
 15,Oracle Database,Analytic,DENSE_RANK,"SELECT {columns}, {numeric_column}, DENSE_RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column}) FROM {table} WHERE ROWNUM <= {row}"
 16,Oracle Database,Analytic,RANK and DENSE_RANK,"SELECT {columns}, {numeric_column}, {order_column}, RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column} DESC) AS RANK, DENSE_RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column}) AS DENSE_RANK FROM {table} WHERE ROWNUM <= {row}"
-17,Oracle Database,Pattern,starts with characters,SELECT {column} FROM {table} WHERE {column} LIKE 'S%' AND ROWNUM <= {row}
-18,Oracle Database,Pattern,containing characters,SELECT {column} FROM {table} WHERE {column} LIKE '%s%' AND ROWNUM <= {row}
-19,Oracle Database,Pattern,containing characters,"SELECT {column} FROM {table} WHERE REGEXP_LIKE ({column}, '(v|ph|f)') AND ROWNUM <= {row}"
-20,Oracle Database,Pattern,containing double vowels,"SELECT {column} FROM {table} WHERE REGEXP_LIKE ({column}, '([aeiou])\1', 'i') AND ROWNUM <= {row}"
-21,Oracle Database,Union,UNION,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
-22,Oracle Database,Union,UNION,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
-23,Oracle Database,Union,UNION ALL,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION ALL SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
-24,Oracle Database,Subquery,EXISTS,SELECT {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL) AND ROWNUM <= {row}
-25,Oracle Database,Subquery,below average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
-26,Oracle Database,Subquery,above average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
+17,Oracle Database,Pattern,containing characters,"SELECT {column} FROM {table} WHERE REGEXP_LIKE ({column}, '[bcdfghjklmnpqrstvwxyz]', 'i') AND ROWNUM <= {row}"
+18,Oracle Database,Pattern,containing vowels,"SELECT {column} FROM {table} WHERE REGEXP_LIKE ({column}, '[aeiou]', 'i') AND ROWNUM <= {row}"
+19,Oracle Database,Union,UNION,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
+20,Oracle Database,Union,UNION,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
+21,Oracle Database,Union,UNION ALL,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION ALL SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
+22,Oracle Database,Subquery,EXISTS,SELECT {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL) AND ROWNUM <= {row}
+23,Oracle Database,Subquery,below average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
+24,Oracle Database,Subquery,above average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
 1,HANA,Aggregate,COUNT *,SELECT COUNT(*) FROM {table}
 2,HANA,Aggregate,COUNT,SELECT COUNT({numeric_column}) FROM {table}
 3,HANA,Aggregate,COUNT DISTINCT,SELECT COUNT(DISTINCT {numeric_column}) FROM {table}
@@ -41,16 +39,14 @@ query_id,database,category,name,query_template
 14,HANA,Analytic,"n rows, descending order",SELECT TOP {row} {columns} FROM {table} ORDER BY {order_column} DESC
 15,HANA,Analytic,DENSE_RANK,"SELECT TOP {row} {columns}, {numeric_column}, DENSE_RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column}) FROM {table}"
 16,HANA,Analytic,RANK and DENSE_RANK,"SELECT TOP {row} {columns}, {numeric_column}, {order_column}, RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column} DESC) AS RANK, DENSE_RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column}) AS DENSE_RANK FROM {table}"
-17,HANA,Pattern,starts with characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE 'S%'
-18,HANA,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE '%s%'
-19,HANA,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '(v|ph|f)'
-20,HANA,Pattern,containing double vowels,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '([aeiou])\1'
-21,HANA,Union,UNION,SELECT {columns} FROM {table} UNION SELECT {columns} FROM {table} LIMIT {row}
-22,HANA,Union,UNION,SELECT {columns} FROM {table} UNION SELECT {columns} FROM {table} LIMIT {row}
-23,HANA,Union,UNION ALL,SELECT {columns} FROM {table} UNION ALL SELECT {columns} FROM {table} LIMIT {row}
-24,HANA,Subquery,EXISTS,SELECT TOP {row} {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL)
-25,HANA,Subquery,below average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
-26,HANA,Subquery,above average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
+17,HANA,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '[bcdfghjklmnpqrstvwxyz]' FLAG 'i'
+18,HANA,Pattern,containing vowels,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '[aeiou]' FLAG 'i'
+19,HANA,Union,UNION,SELECT {columns} FROM {table} UNION SELECT {columns} FROM {table} LIMIT {row}
+20,HANA,Union,UNION,SELECT {columns} FROM {table} UNION SELECT {columns} FROM {table} LIMIT {row}
+21,HANA,Union,UNION ALL,SELECT {columns} FROM {table} UNION ALL SELECT {columns} FROM {table} LIMIT {row}
+22,HANA,Subquery,EXISTS,SELECT TOP {row} {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL)
+23,HANA,Subquery,below average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
+24,HANA,Subquery,above average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
 1,Oracle Database In-Memory,Aggregate,COUNT *,SELECT COUNT(*) FROM {table}
 2,Oracle Database In-Memory,Aggregate,COUNT,SELECT COUNT({numeric_column}) FROM {table}
 3,Oracle Database In-Memory,Aggregate,COUNT DISTINCT,SELECT COUNT(DISTINCT {numeric_column}) FROM {table}
@@ -67,16 +63,14 @@ query_id,database,category,name,query_template
 14,Oracle Database In-Memory,Analytic,"n rows, descending order",SELECT {columns} FROM {table} WHERE ROWNUM <= {row} ORDER BY {order_column} DESC
 15,Oracle Database In-Memory,Analytic,DENSE_RANK,"SELECT {columns}, {numeric_column}, DENSE_RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column}) FROM {table} WHERE ROWNUM <= {row}"
 16,Oracle Database In-Memory,Analytic,RANK and DENSE_RANK,"SELECT {columns}, {numeric_column}, {order_column}, RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column} DESC) AS RANK, DENSE_RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column}) AS DENSE_RANK FROM {table} WHERE ROWNUM <= {row}"
-17,Oracle Database In-Memory,Pattern,starts with characters,SELECT {column} FROM {table} WHERE {column} LIKE 'S%' AND ROWNUM <= {row}
-18,Oracle Database In-Memory,Pattern,containing characters,SELECT {column} FROM {table} WHERE {column} LIKE '%s%' AND ROWNUM <= {row}
-19,Oracle Database In-Memory,Pattern,containing characters,"SELECT {column} FROM {table} WHERE REGEXP_LIKE ({column}, '(v|ph|f)') AND ROWNUM <= {row}"
-20,Oracle Database In-Memory,Pattern,containing double vowels,"SELECT {column} FROM {table} WHERE REGEXP_LIKE ({column}, '([aeiou])\1', 'i') AND ROWNUM <= {row}"
-21,Oracle Database In-Memory,Union,UNION,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
-22,Oracle Database In-Memory,Union,UNION,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
-23,Oracle Database In-Memory,Union,UNION ALL,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION ALL SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
-24,Oracle Database In-Memory,Subquery,EXISTS,SELECT {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL) AND ROWNUM <= {row}
-25,Oracle Database In-Memory,Subquery,below average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
-26,Oracle Database In-Memory,Subquery,above average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
+17,Oracle Database In-Memory,Pattern,containing characters,"SELECT {column} FROM {table} WHERE REGEXP_LIKE ({column}, '[bcdfghjklmnpqrstvwxyz]', 'i') AND ROWNUM <= {row}"
+18,Oracle Database In-Memory,Pattern,containing vowels,"SELECT {column} FROM {table} WHERE REGEXP_LIKE ({column}, '[aeiou]', 'i') AND ROWNUM <= {row}"
+19,Oracle Database In-Memory,Union,UNION,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
+20,Oracle Database In-Memory,Union,UNION,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
+21,Oracle Database In-Memory,Union,UNION ALL,SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2) UNION ALL SELECT {columns} FROM {table} WHERE ROWNUM <= ({row}/2)
+22,Oracle Database In-Memory,Subquery,EXISTS,SELECT {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL) AND ROWNUM <= {row}
+23,Oracle Database In-Memory,Subquery,below average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
+24,Oracle Database In-Memory,Subquery,above average,SELECT {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG({numeric_column}) FROM {table}) AND ROWNUM <= {row}
 1,SQL Server,Aggregate,COUNT *,SELECT COUNT(*) FROM {table}
 2,SQL Server,Aggregate,COUNT,SELECT COUNT({numeric_column}) FROM {table}
 3,SQL Server,Aggregate,COUNT DISTINCT,SELECT COUNT(DISTINCT {numeric_column}) FROM {table}
@@ -86,20 +80,18 @@ query_id,database,category,name,query_template
 7,SQL Server,Aggregate,AVG DISTINCT,SELECT AVG(DISTINCT CAST({numeric_column} AS BIGINT)) FROM {table}
 8,SQL Server,Aggregate,MIN,SELECT MIN({numeric_column}) FROM {table}
 9,SQL Server,Aggregate,MAX,SELECT MAX({numeric_column}) FROM {table}
-10,SQL Server,Aggregate,GROUP BY,"SELECT TOP {row} * FROM (SELECT COUNT({numeric_column}), {numeric_column} FROM {table} GROUP BY {numeric_column})"
+10,SQL Server,Aggregate,GROUP BY,"SELECT TOP {row} * FROM (SELECT COUNT({numeric_column}) AS _count, {numeric_column} FROM {table} GROUP BY {numeric_column}) _table"
 11,SQL Server,Analytic,COUNT rows,SELECT COUNT(*) FROM {table}
 12,SQL Server,Analytic,n rows,SELECT TOP {row} {columns} FROM {table}
 13,SQL Server,Analytic,"n rows, ascending order",SELECT TOP {row} {columns} FROM {table} ORDER BY {order_column} ASC
 14,SQL Server,Analytic,"n rows, descending order",SELECT TOP {row} {columns} FROM {table} ORDER BY {order_column} DESC
 15,SQL Server,Analytic,DENSE_RANK,"SELECT TOP {row} {columns}, {numeric_column}, DENSE_RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column}) FROM {table}"
 16,SQL Server,Analytic,RANK and DENSE_RANK,"SELECT TOP {row} {columns}, {numeric_column}, {order_column}, RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column} DESC) AS RANK, DENSE_RANK() OVER (PARTITION BY {numeric_column} ORDER BY {order_column}) AS DENSE_RANK FROM {table}"
-17,SQL Server,Pattern,starts with characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE 'S%'
-18,SQL Server,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE '%s%'
-19,SQL Server,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '(v|ph|f)'
-20,SQL Server,Pattern,containing double vowels,SELECT TOP {row} {column} FROM {table} WHERE {column} LIKE_REGEXPR '([aeiou])\1'
-21,SQL Server,Union,UNION,SELECT TOP ({row}/2) {columns} FROM {table} UNION SELECT TOP ({row}/2) {columns} FROM {table}
-22,SQL Server,Union,UNION,SELECT TOP ({row}/2) {columns} FROM {table} UNION SELECT TOP ({row}/2) {columns} FROM {table}
-23,SQL Server,Union,UNION ALL,SELECT TOP ({row}/2) {columns} FROM {table} UNION ALL SELECT TOP ({row}/2) {columns} FROM {table}
-24,SQL Server,Subquery,EXISTS,SELECT TOP {row} {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL)
-25,SQL Server,Subquery,below average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
-26,SQL Server,Subquery,above average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
+17,SQL Server,Pattern,containing characters,SELECT TOP {row} {column} FROM {table} WHERE LOWER({column}) LIKE '%[bcdfghjklmnpqrstvwxyz]%'
+18,SQL Server,Pattern,containing vowels,SELECT TOP {row} {column} FROM {table} WHERE LOWER({column}) LIKE '%[aeiou]%'
+19,SQL Server,Union,UNION,SELECT TOP ({row}/2) {columns} FROM {table} UNION SELECT TOP ({row}/2) {columns} FROM {table}
+20,SQL Server,Union,UNION,SELECT TOP ({row}/2) {columns} FROM {table} UNION SELECT TOP ({row}/2) {columns} FROM {table}
+21,SQL Server,Union,UNION ALL,SELECT TOP ({row}/2) {columns} FROM {table} UNION ALL SELECT TOP ({row}/2) {columns} FROM {table}
+22,SQL Server,Subquery,EXISTS,SELECT TOP {row} {column_1} FROM {table} WHERE EXISTS (SELECT {column_1} FROM {table} WHERE {column_1} IS NOT NULL)
+23,SQL Server,Subquery,below average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} <= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
+24,SQL Server,Subquery,above average,SELECT TOP {row} {numeric_column} FROM {table} WHERE {numeric_column} >= (SELECT AVG(CAST({numeric_column} AS BIGINT)) FROM {table})
