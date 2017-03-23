@@ -2,7 +2,25 @@
 
 This is a portable, reproducible, and completely automated application designed to benchmark various database platforms and big data technologies with a goal of comparing how each performs when working with large datasets.  By ensuring the same dataset is inserted into each database platform and executing syntactically equivalent queries, we can achieve an accurate comparison and understand where one outperforms the other.  An interactive HTTP dashboard containing various charting and graphing elements are used to display the benchmarking results for visual analysis.
 
-# DASHBOARD IMAGE HERE
+## Audience
+
+When it comes to Big Data and the platforms that house the data, the most common question being asked is:
+
+> "Which big data platform performs best?"
+
+The answer really depends on a few key factors:
+- Raw data size (small data vs. big data)
+- Query complexity (joins, unions, aggregate and analytical queries)
+- Number of concurrent users
+- Memory, CPU, and network configurations
+
+And since each environment is different, the more appropriate question to ask is:
+
+> "Which performs best under each scenario?"
+
+<span style="color:#428bca">**If your organization is running multiple Big Data platforms, this benchmarking application is designed to compare them side by side.**</span>
+
+# PLACE DASHBOARD IMAGE HERE
 
 ## Features
 - Supports the following big data technologies:
@@ -11,17 +29,18 @@ This is a portable, reproducible, and completely automated application designed 
  - Microsoft SQL Server
  - SAP HANA
  - coming soon:
+   - Apache Hive
+   - Apache Spark SQL
    - SQLite (use pysqlite)
    - MySQL (use mysqldb or mysql.connector or pymysql)
    - MariaDB (use mysqldb or mysql.connector or pymysql)
    - PostgreSQL (use psycopg2)
-   - Apache Hive
-   - Apache Spark SQL
    - Microsoft Azure
 - Compatible on Linux, macOS, and Windows in a reproducible, portable development environment
 - Able to accept multiple source datasets in CSV file format (containing headers)
 - Create tables and insert into database the datasets specified
 - Run benchmarks on these new datasets or on existing tables in the database
+- Able to specify the name of the tables to benchmark
 - Able to specify the number of benchmarking iterations to perform
 - Able to specify the number of concurrent users to simultaneously perform the same benchmarking queries
 - Predefined query templates used to formulate a dynamically generated query which is transferrable between each database technology using a syntactically equivalent query
@@ -67,24 +86,21 @@ The folder structure looks like the following:
 ```
 $ tree -L 1
 .
+├── LICENSE.md
+├── README.md
+├── app
 ├── benchmark.py
 ├── big_data_benchmarking.py
 ├── config.json.example
 ├── create_tables.py
 ├── csv
-├── data                                              !   UPDATE THIS   !
-├── database.py
-├── documentation
+├── data
 ├── drop_tables.py
-├── LICENSE.md
 ├── log
-├── plot.py
 ├── queries
-├── README.md
-├── spark
 └── vagrant
 
-10 directories, 10 files
+6 directories, 7 files
 ```
 
 Move all source CSV datasets into the `big-data-benchmarking/data/` path
@@ -140,43 +156,44 @@ cd /big-data-benchmarking
 
 Print the command line help menu to view all the options for running the application
 ```
-                        UPDATE THIS
-
-
 $ ./big_data_benchmarking.py --help
-
-usage: big_data_benchmarking.py [-h] [-r ROWS] [-i ITERATIONS]
-                               [-u CONCURRENT_USERS] [-p DATA_PATH] [-c] [-d]
-                               [database_list [database_list ...]]
+usage: big_data_benchmarking.py [-h] [-t TABLE_LIKE] [-r ROWS] [-i ITERATIONS]
+                                [-u CONCURRENT_USERS] [-p DATA_PATH] [-c] [-d]
+                                [database_list [database_list ...]]
 
 Big Data Benchmarking
 
 positional arguments:
- database_list         Specify the list of Databases to benchmark. These
-                       names must match the names pre-configured in the
-                       'config.json' file.
+  database_list         Specify the list of Databases to benchmark. These
+                        names must match the names pre-configured in the
+                        'config.json' file.
 
 optional arguments:
- -h, --help            show this help message and exit
- -r ROWS, --rows ROWS  The maximum number of rows to return from each query
-                       execution. Default is 10000
- -i ITERATIONS, --iterations ITERATIONS
-                       The number of benchmark iterations to perform on the
-                       database. Default is 1
- -u CONCURRENT_USERS, --users CONCURRENT_USERS
-                       The number of concurrent users to connect to the
-                       database. Default is 1
- -p DATA_PATH, --path DATA_PATH
-                       Full directory path to where the data files are
-                       stored. These will be used to create the tables and
-                       insert into database. Default path is: /data
- -c, --create-tables   Create tables and insert into database the data files
-                       that exist within in the folder '--path' argument. Not
-                       specifying this option will run benchmarks on all
-                       existing tables in the database
- -d, --drop-tables     The '--create-tables' argument must be specified. Only
-                       those tables created will be dropped.
-
+  -h, --help            show this help message and exit
+  -t TABLE_LIKE, --table-like TABLE_LIKE
+                        Specify the name of the tables to benchmark. This uses
+                        the SQL 'LIKE' operator to search a specified pattern
+                        so use the '%' sign to define wildcards. Default is
+                        '%' which will find all existing tables in the
+                        database.
+  -r ROWS, --rows ROWS  The maximum number of rows to return from each query
+                        execution. Default is 10000
+  -i ITERATIONS, --iterations ITERATIONS
+                        The number of benchmark iterations to perform on the
+                        database. Default is 1
+  -u CONCURRENT_USERS, --users CONCURRENT_USERS
+                        The number of concurrent users to connect to the
+                        database. Default is 1
+  -p DATA_PATH, --path DATA_PATH
+                        Full directory path to where the data files are
+                        stored. These will be used to create the tables and
+                        insert into database. Default path is: /data
+  -c, --create-tables   Create tables and insert into database the data files
+                        that exist within in the folder '--path' argument. Not
+                        specifying this option will run benchmarks on all
+                        existing tables in the database.
+  -d, --drop-tables     The '--create-tables' argument must be specified. Only
+                        those tables created will be dropped.
 ```
 
 ## Benchmarking
@@ -190,6 +207,11 @@ The `big-data-benchmarking.py` Python script is the main entrypoint to the appli
 - Run against **Oracle Database** and **SQL Server** with default options
 ```sh
 ./big-data-benchmarking.py "Oracle Database" "SQL Server"
+```
+
+- Run on **Oracle Database In-Memory** against all tables whose name starts with "DEV"
+```sh
+./big-data-benchmarking.py "Oracle Database In-Memory" -t "DEV%"
 ```
 
 - Run against **HANA** limiting the number of rows to return from each query to **5000**
@@ -228,18 +250,14 @@ The `/big-data-benchmarking/csv/` is the location where the actual benchmarking 
 
 Here is a sample of what the CSV data looks like:
 
-<div class="alert alert-danger">
-  <strong>GENERATE WITH:</strong> head -6 big_data_benchmarking_20170207.csv > temp.csv
-  csvtomd --padding 0 temp.csv > temp.md
-</div>
-
-category|concurrency_factor|database|name|query_executed|query_id|query_template|rows|table_name|table_row_count|table_size_category|time
+category|concurrency_factor|database|name|query_executed |query_id|query_template|rows|table_name |table_row_count|table_size_category|time
 -|-|-|-|-|-|-|-|-|-|-|-
-Aggregate|1.0|Oracle Database|COUNT * |SELECT COUNT(*) FROM "On_Time_Performance_2015_1"|1.0     |SELECT COUNT(*) FROM {table}|1.0 |On_Time_Performance_2015_1|469968.0|Medium             |0.8305385719941114
-Aggregate|1.0|Oracle Database|COUNT|SELECT COUNT("MONTH") FROM "On_Time_Performance_2015_1"|2.0     |SELECT COUNT({agg_column}) FROM {table}|1.0 |On_Time_Performance_2015_1|469968.0       |Medium|0.5685518390018842
-Aggregate|1.0|Oracle Database|COUNT DISTINCT|SELECT COUNT(DISTINCT "DISTANCE") FROM "On_Time_Performance_2015_1"|3.0|SELECT COUNT(DISTINCT {agg_column}) FROM {table}|1.0 |On_Time_Performance_2015_1|469968.0|Medium|0.6576212689979002
-Aggregate|1.0|Oracle Database|SUM|SELECT SUM("DEP_DEL15") FROM "On_Time_Performance_2015_1"|4.0     |SELECT SUM({agg_column}) FROM {table}|1.0 |On_Time_Performance_2015_1|469968.0|Medium|0.5980515560004278
-Aggregate|1.0|Oracle Database|SUM DISTINCT|SELECT SUM(DISTINCT "CARRIER_DELAY") FROM "On_Time_Performance_2015_1"|5.0|SELECT SUM(DISTINCT {agg_column}) FROM {table}|1.0 |On_Time_Performance_2015_1|469968.0|Medium|0.6684156589981285
+Aggregate|1|Oracle Database|COUNT * |SELECT COUNT(*) FROM "On_Time_Performance_ALL"|1|SELECT COUNT(*) FROM {table}|1|On_Time_Performance_ALL|160690563|X-Large|149.38998920100005
+Aggregate|1|Oracle Database|COUNT|SELECT COUNT("LATE_AIRCRAFT_DELAY") FROM "On_Time_Performance_ALL" |2|SELECT COUNT({numeric_column}) FROM {table}|1|On_Time_Performance_ALL|160690563|X-Large|144.099790143
+Aggregate|1|Oracle Database|COUNT DISTINCT|SELECT COUNT(DISTINCT "DEST_CITY_MARKET_ID") FROM "On_Time_Performance_ALL"|3|SELECT COUNT(DISTINCT {numeric_column}) FROM {table}|1|On_Time_Performance_ALL|160690563|X-Large|156.50899973100002
+Aggregate|1|Oracle Database|SUM |SELECT SUM("WHEELS_OFF") FROM "On_Time_Performance_ALL"|4|SELECT SUM({numeric_column}) FROM {table}|1|On_Time_Performance_ALL|160690563|X-Large|156.93902191200004
+Aggregate|1|Oracle Database|SUM DISTINCT|SELECT SUM(DISTINCT "LATE_AIRCRAFT_DELAY") FROM "On_Time_Performance_ALL"|5|SELECT SUM(DISTINCT {numeric_column}) FROM {table}|1|On_Time_Performance_ALL|160690563|X-Large|149.11920515500003
+
 
 ## Bokeh Server Web App
 
