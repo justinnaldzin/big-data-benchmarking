@@ -1,5 +1,7 @@
 ## Overview
 
+<img src="images/benchmarking.jpg" alt="Benchmarking" style="float:right;height:175px;padding:10px;">
+<img src="images/big-data.jpg" alt="Big Data" style="float:left;height:175px;padding:10px">    
 This is a portable, reproducible, and completely automated application designed to benchmark various database platforms and big data technologies with a goal of comparing how each performs when working with large datasets.  By ensuring the same dataset is inserted into each database platform and executing syntactically equivalent queries, we can achieve an accurate comparison and understand where one outperforms the other.  An interactive HTTP dashboard containing various charting and graphing elements are used to display the benchmarking results for visual analysis.
 
 ## Audience
@@ -287,8 +289,9 @@ vagrant up
 
 ## Feature Requests
 
-- Option to specify the *minimum* amount of rows to return from each query.  Currently you are only permitted to limit the *maximum* amount of rows.
+- Option to specify the *minimum* amount of rows to return from each query.  Currently you are only permitted to limit the *maximum* amount of rows
 - Benchmark different python drivers against the same database type (MySQL example: `mysqldb` vs `mysql.connector` vs `pymysql`)
+- Embed Bokeh into Flask app with Jinja templates
 
 ## Author
 
