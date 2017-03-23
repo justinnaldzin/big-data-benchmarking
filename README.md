@@ -1,9 +1,10 @@
 ## Overview
 
-<p>
-<img src="images/benchmarking.jpg" alt="Benchmarking" style="float:right;height:175px;padding:10px;">
-<img src="images/big-data.jpg" alt="Big Data" style="float:left;height:175px;padding:10px">    
 This is a portable, reproducible, and completely automated application designed to benchmark various database platforms and big data technologies with a goal of comparing how each performs when working with large datasets.  By ensuring the same dataset is inserted into each database platform and executing syntactically equivalent queries, we can achieve an accurate comparison and understand where one outperforms the other.  An interactive HTTP dashboard containing various charting and graphing elements are used to display the benchmarking results for visual analysis.
+
+<p align="center">
+<img src="images/benchmarking.jpg" alt="Benchmarking">
+<img src="images/big-data.jpg" alt="Big Data">
 </p>
 
 ## Audience
