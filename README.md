@@ -23,7 +23,7 @@ And since each environment is different, the more appropriate question to ask is
 
 > "Which performs best under each scenario?"
 
-<span style="color:#428bca">**If your organization is running multiple Big Data platforms, this benchmarking application is designed to compare them side by side.**</span>
+**If your organization is running multiple Big Data platforms, this benchmarking application is designed to compare them side by side.**
 
 # PLACE DASHBOARD IMAGE HERE
 
