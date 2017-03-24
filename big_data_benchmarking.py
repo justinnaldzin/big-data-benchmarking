@@ -77,7 +77,7 @@ def main(args):
                 logging.info(sql)
                 tables_dataframe = pandas.read_sql(sql, engine)
                 tables_dataframe.columns = tables_dataframe.columns.str.lower()  # SQLAlchemy column case sensitivity is inconsistent between SQL dialects
-                tables_dataframe.sort_values('table_name', axis=1, inplace=True)
+                tables_dataframe.sort_values('table_name', inplace=True)
                 logging.info('Found the following table names:')
                 [logging.info(table_name) for table_name in tables_dataframe['table_name']]
             else:  # Use data files on local file system to create tables and insert into database
@@ -89,7 +89,7 @@ def main(args):
                     sys.exit(1)
                 tables_dataframe = pandas.DataFrame({'table_name': [(os.path.splitext(os.path.basename(filename))[0])
                                                                     for filename in data_filepath_list]})
-                tables_dataframe.sort_values('table_name', axis=1, inplace=True)
+                tables_dataframe.sort_values('table_name', inplace=True)
                 logging.info('Found the following files in path:  ' + str(data_path))
                 [logging.info(filename) for filename in data_filepath_list]
 
