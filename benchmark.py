@@ -86,23 +86,24 @@ def database(queries_dataframe, attributes, tables_dataframe, csv_filepath, args
         logging.info("============  Iteration " + str(i+1) + " ============")
         benchmark_dataframe = pandas.DataFrame()
         for table_index, table_row in tables_dataframe.iterrows():
-            logging.info("Querying: " + table_row['table_name'])
+            logging.info("Querying table: " + table_row['table_name'])
             datatypes_query = attributes['datatypes_query'].format(table_name=table_row['table_name'])
             datatypes_dataframe = pandas.read_sql(datatypes_query, engine)
             datatypes_dataframe.columns = map(str.lower, datatypes_dataframe.columns)  # SQLAlchemy column case sensitivity is inconsistent between SQL dialects
             for query_index, query_row in queries_dataframe.iterrows():
                 try:
-                    (query_row['query_executed'], query_row['rows'], query_row['time']) = build_query(engine, query_row['query_template'], table_row['table_name'], datatypes_dataframe, args['rows'])
-                    logging.info("Query " + str(query_row['query_id']) + str(':  {:f} sec'.format(query_row['time'])))
+                    (query_row['query_executed'], query_row['rows'], query_row['time']) = build_query(
+                        engine, query_row['query_template'], table_row['table_name'], datatypes_dataframe, args['rows'])
+                    logging.info('Table: ' + table_row['table_name'] + " Query " + str(query_row['query_id']) + str(': {:f} sec'.format(query_row['time'])))
                 except TimeoutException as error:
+                    # TEST THIS SECTION
                     print("Function took longer than %d seconds" % error.args[1])
                     (query_row['query_executed'], query_row['rows'], query_row['time']) = ('Timeout!', 0, 600)
-                    logging.warning("Timeout!  " + "Query " + str(query_row['query_id']) + str(':  {:f} sec'.format(query_row['time'])))
+                    logging.error("Timeout!  " + "Query " + str(query_row['query_id']) + str(':  {:f} sec'.format(query_row['time'])))
                 except Exception as error:
-                    print("Function raised %s" % error)
+                    logging.error(error)
                     (query_row['query_executed'], query_row['rows'], query_row['time']) = ('Timeout!', 0, 600)
-                    logging.warning("Timeout!  " + "Query " + str(query_row['query_id']) + str(
-                        ':  {:f} sec'.format(query_row['time'])))
+                    logging.error("Timeout!  " + "Query " + str(query_row['query_id']) + str(':  {:f} sec'.format(query_row['time'])))
                 query_row['concurrency_factor'] = int(args['concurrent_users'])
                 query_row = pandas.concat([query_row, table_row])
                 benchmark_dataframe = benchmark_dataframe.append(query_row, ignore_index=True)
