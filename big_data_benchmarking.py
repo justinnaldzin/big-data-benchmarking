@@ -28,7 +28,7 @@ script_name = os.path.splitext(os.path.basename(__file__))[0]
 def initialize_logging(logging_dir):
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s %(threadName)s %(message)s')
+    formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s %(threadName)s (%(thread)d) %(message)s')
 
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
@@ -122,9 +122,9 @@ def main(args):
                 queries_dataframe['database'] == database]  # filter queries on database name
             if not queries_dataframe.empty:
                 with benchmark.Timer() as t:
-                    thread_list = [Thread(name=database, target=benchmark.database,
+                    thread_list = [Thread(name=database + ' thread #' + str(thread_number+1), target=benchmark.database,
                                           args=(queries_dataframe, attributes, tables_dataframe, csv_filepath, args))
-                                   for _ in range(args['concurrent_users'])]
+                                   for thread_number in range(args['concurrent_users'])]
                     [thread.start() for thread in thread_list]
                     [thread.join() for thread in thread_list]
                 logging.info(database + ' benchmark time: %.07f sec' % t.interval)
