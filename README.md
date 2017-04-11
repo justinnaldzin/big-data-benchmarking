@@ -203,9 +203,8 @@ optional arguments:
 
 ## Benchmarking
 
-<div class="alert alert-info">
-  <strong>Note!</strong> If you simply want to view the interactive dashboard using sample benchmarking results, skip this section and jump down to the [Benchmarking Results](#benchmarking-results) section.
-</div>
+**Note!** If you simply want to view the interactive dashboard using sample benchmarking results, skip this section and jump down to the [Benchmarking Results](#benchmarking-results) section.
+
 
 The `big-data-benchmarking.py` Python script is the main entrypoint to the application.  Here are some example benchmarking scenarios, and how to execute the script:
 
@@ -283,9 +282,7 @@ Finally, when you are finished running the benchmarks and no longer need to view
 ```sh
 vagrant destroy
 ```
-<div class="alert alert-info">
-  <strong>Note!</strong> The `big-data-benchmarking` project folder remains on your local system, along with the CSV benchmarking results.  You will no longer be able to run the benchmarks or view the dashboard once the VM is terminated.  You can easily reprovision the VM and start over
-</div>
+**Note!** The `big-data-benchmarking` project folder remains on your local system, along with the CSV benchmarking results.  You will no longer be able to run the benchmarks or view the dashboard once the VM is terminated.  You can easily reprovision the VM and start over
 ```sh
 vagrant up
 ```
