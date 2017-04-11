@@ -7,6 +7,7 @@ This is a portable, reproducible, and completely automated application designed 
 <img src="images/big-data.jpg" alt="Big Data">
 </p>
 
+
 ## Audience
 
 When it comes to Big Data and the platforms that house the data, the most common question being asked is:
@@ -25,9 +26,11 @@ And since each environment is different, the more appropriate question to ask is
 
 **If your organization is running multiple Big Data platforms, this benchmarking application is designed to compare them side by side.**
 
-# PLACE DASHBOARD IMAGE HERE
+![dashboard1](images/dashboard1.jpg "Dashboard Example")
+
 
 ## Features
+
 - Supports the following big data technologies:
  - Oracle Database
  - Oracle Database In-Memory
@@ -54,6 +57,7 @@ And since each environment is different, the more appropriate question to ask is
 - Output benchmarking results to CSV
 - Plot the results in an interactive HTML dashboard containing data tables, charts and graphs using a [Bokeh](http://bokeh.pydata.org/) server web app
 
+
 ## Requirements
 
 - [Vagrant](https://www.vagrantup.com/) - A tool for building complete development environments
@@ -69,6 +73,7 @@ And since each environment is different, the more appropriate question to ask is
  - [/r/datasets](https://www.reddit.com/r/datasets/) - subreddit with hundreds of interesting datasets
  - [Awesome Public Datasets](https://github.com/caesar0301/awesome-public-datasets) - list of datasets, hosted on GitHub.
  - [Kaggle](https://www.kaggle.com/datasets) - Kaggle datasets
+
 
 ## Installation
 
@@ -201,6 +206,7 @@ optional arguments:
                         those tables created will be dropped.
 ```
 
+
 ## Benchmarking
 
 **Note!** If you simply want to view the interactive dashboard using sample benchmarking results, skip this section and jump down to the [Benchmarking Results](#benchmarking-results) section.
@@ -248,6 +254,7 @@ The `big-data-benchmarking.py` Python script is the main entrypoint to the appli
 ./big-data-benchmarking.py "Oracle Database" -c -d
 ```
 
+
 ## Benchmarking Results
 
 The `/big-data-benchmarking/csv/` is the location where the actual benchmarking results are written to.  Within this folder you will also find an example benchmarking results CSV file.  This example allows full functionality of the Bokeh server web application even without running any benchmarks.
@@ -274,7 +281,8 @@ bokeh serve app
 
 Then open your browser and navigate to the dashboard:  http://localhost:5006
 
-# DASHBOARD IMAGE HERE
+![dashboard2](images/dashboard2.jpg "Dashboard Example")
+
 
 ## Conclusion
 
@@ -287,11 +295,13 @@ vagrant destroy
 vagrant up
 ```
 
+
 ## Feature Requests
 
 - Option to specify the *minimum* amount of rows to return from each query.  Currently you are only permitted to limit the *maximum* amount of rows
 - Benchmark different python drivers against the same database type (MySQL example: `mysqldb` vs `mysql.connector` vs `pymysql`)
 - Embed Bokeh into Flask app with Jinja templates
+
 
 ## Author
 
