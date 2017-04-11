@@ -25,7 +25,7 @@ class TimeoutException(Exception):
     pass
 
 
-@concurrent.process(timeout=1800)  # timeout after 3600 seconds (60 minutes)
+@concurrent.process(timeout=3600)  # timeout after 3600 seconds (60 minutes)
 def query(sql, engine):
     """
     Uses the pebble.concurrent.process decorator, this function will timeout after the specified time frame has passed.
