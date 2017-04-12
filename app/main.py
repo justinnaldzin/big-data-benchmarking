@@ -80,7 +80,7 @@ source = ColumnDataSource(data=dataframe)
 
 # DataTable displays the raw output from the CSV file.
 columns = [TableColumn(field=c, title=c) for c in dataframe.columns]
-data_table = DataTable(source=source, columns=columns, editable=False, width=1400, height=500)
+data_table = DataTable(source=source, columns=columns, editable=False, width=1480, height=500)
 
 # BarChart displaying the average query execution time for each database based on the concurrency factor.
 bar_concurrency_by_database = Bar(source.to_df(), values='time', label='concurrency_factor', group='database',
@@ -158,7 +158,7 @@ for i in dataframe['concurrency_factor'].sort_values().unique():
         .highlight_min(axis=1, color='#dff0d8') \
         .highlight_max(axis=1, color='#f2dede') \
         .render()
-    plots['html_avg_query_time'].append(Div(text=bootstrap_css + bokeh_css + avg_query_time_html, width=1800))
+    plots['html_avg_query_time'].append(Div(text=bootstrap_css + bokeh_css + avg_query_time_html, width=1765))
 
     # # Write individual HTML files
     # output_file = 'average_query_time_concurrency_' + str(i) + '.html'
