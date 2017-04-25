@@ -32,18 +32,18 @@ And since each environment is different, the more appropriate question to ask is
 ## Features
 
 - Supports the following big data technologies:
- - Oracle Database
- - Oracle Database In-Memory
- - Microsoft SQL Server
- - SAP HANA
- - coming soon:
-   - Apache Hive
-   - Apache Spark SQL
-   - SQLite (use pysqlite)
-   - MySQL (use mysqldb or mysql.connector or pymysql)
-   - MariaDB (use mysqldb or mysql.connector or pymysql)
-   - PostgreSQL (use psycopg2)
-   - Microsoft Azure
+  - Oracle Database
+  - Oracle Database In-Memory
+  - Microsoft SQL Server
+  - SAP HANA
+  - coming soon:
+    - Apache Hive
+    - Apache Spark SQL
+    - SQLite (use pysqlite)
+    - MySQL (use mysqldb or mysql.connector or pymysql)
+    - MariaDB (use mysqldb or mysql.connector or pymysql)
+    - PostgreSQL (use psycopg2)
+    - Microsoft Azure
 - Compatible on Linux, macOS, and Windows in a reproducible, portable development environment
 - Able to accept multiple source datasets in CSV file format (containing headers)
 - Create tables and insert into database the datasets specified
@@ -63,16 +63,16 @@ And since each environment is different, the more appropriate question to ask is
 - [Vagrant](https://www.vagrantup.com/) - A tool for building complete development environments
 - [VirtualBox](https://www.virtualbox.org/) - A cross-platform virtualization application
 - Read/Write permissions to one or more of the following database technologies:
- - Oracle Database
- - Oracle Database In-Memory
- - Microsoft SQL Server
- - SAP HANA
- - more coming soon...
+  - Oracle Database
+  - Oracle Database In-Memory
+  - Microsoft SQL Server
+  - SAP HANA
+  - more coming soon...
 - One or more CSV datasets (containing headers).  Recommended sites to find open datasets:
- - [data.gov](https://www.data.gov) - The home of the U.S. Government's open data
- - [/r/datasets](https://www.reddit.com/r/datasets/) - subreddit with hundreds of interesting datasets
- - [Awesome Public Datasets](https://github.com/caesar0301/awesome-public-datasets) - list of datasets, hosted on GitHub.
- - [Kaggle](https://www.kaggle.com/datasets) - Kaggle datasets
+  - [data.gov](https://www.data.gov) - The home of the U.S. Government's open data
+  - [/r/datasets](https://www.reddit.com/r/datasets/) - subreddit with hundreds of interesting datasets
+  - [Awesome Public Datasets](https://github.com/caesar0301/awesome-public-datasets) - list of datasets, hosted on GitHub.
+  - [Kaggle](https://www.kaggle.com/datasets) - Kaggle datasets
 
 
 ## Installation
