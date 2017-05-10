@@ -58,6 +58,7 @@ pip3 install pebble==4.1.0
 pip3 install sasl==0.2.1
 pip3 install thrift==0.9.3
 pip3 install thrift-sasl==0.2.1
+pip3 install tornado==4.4.2
 
 /usr/bin/2to3 -w /usr/lib/python3.5/site-packages/sqlalchemy_hana/  # transform the package from Python 2.x to 3.x
 /usr/bin/2to3 -w /usr/lib/python3.5/site-packages/pyhive/
