@@ -54,6 +54,7 @@ pip3 install psycopg2==2.7
 pip3 install csvkit==1.0.1  # Suite of utilities for converting to and working with CSV
 pip3 install retrying==1.3.3
 pip3 install inflection==0.3.1
+pip3 install pebble==4.1.0
 pip3 install sasl==0.2.1
 pip3 install thrift==0.9.3
 pip3 install thrift-sasl==0.2.1
